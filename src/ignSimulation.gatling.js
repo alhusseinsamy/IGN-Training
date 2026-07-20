@@ -1,5 +1,13 @@
-import { simulation, atOnceUsers, global, scenario, getParameter } from "@gatling.io/core";
+import {
+  simulation,
+  atOnceUsers,
+  global,
+  scenario,
+  getParameter,
+} from "@gatling.io/core";
 import { http } from "@gatling.io/http";
+import { homePage } from "./endpoints/webEndpoints";
+import { session } from "./endpoints/apiEndpoints";
 
 export default simulation((setUp) => {
   // Load VU count from system properties
@@ -12,12 +20,12 @@ export default simulation((setUp) => {
     .baseUrl("https://api-ecomm.gatling.io")
     .acceptHeader("application/json")
     .userAgentHeader(
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
     );
 
   // Define scenario
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
-  const scn = scenario("Scenario").exec(http("Session").get("/session"));
+  const scn = scenario("Scenario").exec(homePage, session);
 
   // Define assertions
   // Reference: https://docs.gatling.io/reference/script/core/assertions/
