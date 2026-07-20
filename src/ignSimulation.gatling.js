@@ -4,10 +4,11 @@ import {
   global,
   scenario,
   getParameter,
+  exec,
 } from "@gatling.io/core";
 import { http, Proxy } from "@gatling.io/http";
 import { homePage } from "./endpoints/webEndpoints";
-import { session } from "./endpoints/apiEndpoints";
+import { products, session } from "./endpoints/apiEndpoints";
 
 export default simulation((setUp) => {
   // Load VU count from system properties
@@ -26,7 +27,13 @@ export default simulation((setUp) => {
 
   // Define scenario
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
-  const scn = scenario("Scenario").exec(homePage, session);
+  const scn = scenario("Scenario").exec(
+    homePage,
+    session,
+    exec((session) => session.set("pageNumber", "0")),
+    exec((session) => session.set("searchKey", "")),
+    products,
+  );
 
   // Define assertions
   // Reference: https://docs.gatling.io/reference/script/core/assertions/
