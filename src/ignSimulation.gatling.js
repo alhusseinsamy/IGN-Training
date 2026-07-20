@@ -5,7 +5,7 @@ import {
   scenario,
   getParameter,
 } from "@gatling.io/core";
-import { http } from "@gatling.io/http";
+import { http, Proxy } from "@gatling.io/http";
 import { homePage } from "./endpoints/webEndpoints";
 import { session } from "./endpoints/apiEndpoints";
 
@@ -22,6 +22,7 @@ export default simulation((setUp) => {
     .userAgentHeader(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
     );
+  // .proxy(Proxy("myHttpProxyHost", 8080).https());
 
   // Define scenario
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
