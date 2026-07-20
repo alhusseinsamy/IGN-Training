@@ -5,15 +5,19 @@ import {
   scenario,
   getParameter,
   exec,
+  jsonFile,
+  feed,
 } from "@gatling.io/core";
 import { http, Proxy } from "@gatling.io/http";
 import { homePage } from "./endpoints/webEndpoints";
-import { products, session } from "./endpoints/apiEndpoints";
+import { login, products, session } from "./endpoints/apiEndpoints";
 
 export default simulation((setUp) => {
   // Load VU count from system properties
   // Reference: https://docs.gatling.io/guides/passing-parameters/
   const vu = parseInt(getParameter("vu", "1"));
+
+  const usersFeeder = jsonFile("data/users.json").circular();
 
   // Define HTTP configuration
   // Reference: https://docs.gatling.io/reference/script/protocols/http/protocol/
@@ -33,6 +37,8 @@ export default simulation((setUp) => {
     exec((session) => session.set("pageNumber", "0")),
     exec((session) => session.set("searchKey", "")),
     products,
+    feed(usersFeeder),
+    login,
   );
 
   // Define assertions
