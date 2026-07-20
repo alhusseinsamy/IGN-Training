@@ -39,6 +39,7 @@ export default simulation((setUp) => {
     products,
     feed(usersFeeder),
     login,
+    products,
   );
 
   // Define assertions
