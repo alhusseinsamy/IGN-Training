@@ -4,6 +4,7 @@ import {
   global,
   scenario,
   simulation,
+  stressPeakUsers,
 } from "@gatling.io/core";
 import { http } from "@gatling.io/http";
 import {
@@ -46,9 +47,21 @@ export default simulation((setUp) => {
     global().failedRequests().percent().lt(5),
   ];
 
+  const injectionProfile = () => {
+    switch (testType) {
+      case "stress":
+        return scn.injectOpen(stressPeakUsers(vu).during(duration));
+      default:
+        return scn.injectOpen(atOnceUsers(vu));
+    }
+  };
+
   // Define injection profile and execute the test
   // Reference: https://docs.gatling.io/reference/script/core/injection/
-  setUp(scn.injectOpen(atOnceUsers(vu)))
-    .assertions(...assertions)
+  setUp(injectionProfile())
+    .assertions(
+      global().responseTime().percentile(90).lt(500),
+      global().failedRequests().percent().lt(5),
+    )
     .protocols(httpProtocol);
 });
