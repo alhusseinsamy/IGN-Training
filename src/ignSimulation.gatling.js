@@ -2,6 +2,7 @@ import {
   atOnceUsers,
   getParameter,
   global,
+  pause,
   scenario,
   simulation,
   stressPeakUsers,
@@ -35,8 +36,11 @@ export default simulation((setUp) => {
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
   const scn = scenario("Scenario").exec(
     homePageGroup,
+    // pause(5, 15),
     loginGroup,
+    // pause(5, 15),
     browseAndAddToCartGroup,
+    // pause(5, 15),
     checkoutGroup,
   );
 

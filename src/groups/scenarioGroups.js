@@ -1,4 +1,4 @@
-import { feed, group, jsonFile } from "@gatling.io/core";
+import { feed, group, jsonFile, pause } from "@gatling.io/core";
 import { homePage, loginPage } from "../endpoints/webEndpoints";
 import {
   cart,
@@ -25,6 +25,7 @@ export const homePageGroup = group("Homepage group").on(
 
 export const loginGroup = group("Login group").on(
   loginPage,
+  // pause(5, 15),
   feed(usersFeeder),
   login,
 );
