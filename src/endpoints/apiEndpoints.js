@@ -24,3 +24,9 @@ export const cart = http("Add to cart")
   .post("/cart")
   .body(ElFileBody("bodies/cart.json"))
   .check(status().is(200));
+
+export const checkout = http("Checkout")
+  .post("/checkout")
+  .header("Authorization", "#{accessToken}")
+  .body(ElFileBody("bodies/cart.json"))
+  .check(status().is(200));

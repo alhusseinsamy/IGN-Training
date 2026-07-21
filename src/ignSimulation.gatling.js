@@ -10,7 +10,13 @@ import {
 } from "@gatling.io/core";
 import { http, Proxy } from "@gatling.io/http";
 import { homePage } from "./endpoints/webEndpoints";
-import { cart, login, products, session } from "./endpoints/apiEndpoints";
+import {
+  cart,
+  checkout,
+  login,
+  products,
+  session,
+} from "./endpoints/apiEndpoints";
 
 export default simulation((setUp) => {
   // Load VU count from system properties
@@ -48,6 +54,7 @@ export default simulation((setUp) => {
       return session.set("cartItems", cartItems);
     }),
     cart,
+    checkout,
   );
 
   // Define assertions
