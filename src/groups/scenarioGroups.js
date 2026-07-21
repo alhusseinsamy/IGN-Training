@@ -1,5 +1,5 @@
-import { feed, group, jsonFile, pause, repeat } from "@gatling.io/core";
-import { homePage, loginPage } from "../endpoints/webEndpoints";
+import { csv, feed, group, jsonFile, pause, repeat } from "@gatling.io/core";
+import { homePage, loginPage, productPage } from "../endpoints/webEndpoints";
 import {
   cart,
   checkout,
@@ -16,6 +16,7 @@ import {
 } from "../actions/actions";
 
 const usersFeeder = jsonFile("data/users.json").circular();
+const productsFeeder = csv("data/productUrls.csv").random();
 
 export const homePageGroup = group("Homepage group").on(
   homePage,
@@ -46,6 +47,11 @@ export const browseAndAddToCartOnEachPageGroup = group(
   setSearchKey,
   removePageNumberFromSession,
   repeat(4, "pageNumber").on(products, chooseRandomProductPerPage, cart),
+);
+
+export const fetchProductGroup = group("Fetch product group").on(
+  feed(productsFeeder),
+  productPage,
 );
 
 export const checkoutGroup = group("Checkout group").on(checkout);

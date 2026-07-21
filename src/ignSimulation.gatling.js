@@ -12,6 +12,7 @@ import {
   browseAndAddToCartGroup,
   browseAndAddToCartOnEachPageGroup,
   checkoutGroup,
+  fetchProductGroup,
   homePageGroup,
   loginGroup,
 } from "./groups/scenarioGroups";
@@ -35,7 +36,7 @@ export default simulation((setUp) => {
 
   // Define scenario
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
-  const scn1 = scenario("Scenario").exec(
+  const scn1 = scenario("Scenario 1").exec(
     homePageGroup,
     // pause(5, 15),
     loginGroup,
@@ -45,7 +46,7 @@ export default simulation((setUp) => {
     checkoutGroup,
   );
 
-  const scn2 = scenario("Scenario").exec(
+  const scn2 = scenario("Scenario 2").exec(
     homePageGroup,
     // pause(5, 15),
     loginGroup,
@@ -55,12 +56,14 @@ export default simulation((setUp) => {
     checkoutGroup,
   );
 
+  const scn3 = scenario("Scenario 3 - Product URLS").exec(fetchProductGroup);
+
   const injectionProfile = () => {
     switch (testType) {
       case "stress":
-        return scn2.injectOpen(stressPeakUsers(vu).during(duration));
+        return scn3.injectOpen(stressPeakUsers(vu).during(duration));
       default:
-        return scn2.injectOpen(atOnceUsers(vu));
+        return scn3.injectOpen(atOnceUsers(vu));
     }
   };
 

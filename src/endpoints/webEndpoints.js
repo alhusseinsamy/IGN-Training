@@ -7,3 +7,7 @@ export const homePage = http("Homepage")
 export const loginPage = http("Login page")
   .get("https://ecomm.gatling.io/login")
   .check(status().is(200));
+
+export const productPage = http("Product page")
+  .get("#{productUrl}")
+  .check(status().is(200));
