@@ -1,4 +1,4 @@
-import { feed, group, jsonFile, pause } from "@gatling.io/core";
+import { feed, group, jsonFile, pause, repeat } from "@gatling.io/core";
 import { homePage, loginPage } from "../endpoints/webEndpoints";
 import {
   cart,
@@ -9,6 +9,8 @@ import {
 } from "../endpoints/apiEndpoints";
 import {
   chooseRandomProduct,
+  chooseRandomProductPerPage,
+  removePageNumberFromSession,
   setPageNumber,
   setSearchKey,
 } from "../actions/actions";
@@ -36,6 +38,14 @@ export const browseAndAddToCartGroup = group("Browse and add to cart group").on(
   products,
   chooseRandomProduct,
   cart,
+);
+
+export const browseAndAddToCartOnEachPageGroup = group(
+  "Browse and add to cart on each page group",
+).on(
+  setSearchKey,
+  removePageNumberFromSession,
+  repeat(4, "pageNumber").on(products, chooseRandomProductPerPage, cart),
 );
 
 export const checkoutGroup = group("Checkout group").on(checkout);

@@ -10,6 +10,7 @@ import {
 import { http } from "@gatling.io/http";
 import {
   browseAndAddToCartGroup,
+  browseAndAddToCartOnEachPageGroup,
   checkoutGroup,
   homePageGroup,
   loginGroup,
@@ -34,7 +35,7 @@ export default simulation((setUp) => {
 
   // Define scenario
   // Reference: https://docs.gatling.io/reference/script/core/scenario/
-  const scn = scenario("Scenario").exec(
+  const scn1 = scenario("Scenario").exec(
     homePageGroup,
     // pause(5, 15),
     loginGroup,
@@ -44,12 +45,22 @@ export default simulation((setUp) => {
     checkoutGroup,
   );
 
+  const scn2 = scenario("Scenario").exec(
+    homePageGroup,
+    // pause(5, 15),
+    loginGroup,
+    // pause(5, 15),
+    browseAndAddToCartOnEachPageGroup,
+    // pause(5, 15),
+    checkoutGroup,
+  );
+
   const injectionProfile = () => {
     switch (testType) {
       case "stress":
-        return scn.injectOpen(stressPeakUsers(vu).during(duration));
+        return scn2.injectOpen(stressPeakUsers(vu).during(duration));
       default:
-        return scn.injectOpen(atOnceUsers(vu));
+        return scn2.injectOpen(atOnceUsers(vu));
     }
   };
 
