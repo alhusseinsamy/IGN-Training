@@ -17,6 +17,8 @@ export default simulation((setUp) => {
   // Load VU count from system properties
   // Reference: https://docs.gatling.io/guides/passing-parameters/
   const vu = parseInt(getParameter("vu", "1"));
+  const testType = getParameter("testType", "smoke");
+  const duration = parseInt(getParameter("duration", "10"));
 
   // Define HTTP configuration
   // Reference: https://docs.gatling.io/reference/script/protocols/http/protocol/
