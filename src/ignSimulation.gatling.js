@@ -44,13 +44,6 @@ export default simulation((setUp) => {
     checkoutGroup,
   );
 
-  // Define assertions
-  // Reference: https://docs.gatling.io/reference/script/core/assertions/
-  const assertions = [
-    global().responseTime().percentile(90).lt(500),
-    global().failedRequests().percent().lt(5),
-  ];
-
   const injectionProfile = () => {
     switch (testType) {
       case "stress":
@@ -60,12 +53,25 @@ export default simulation((setUp) => {
     }
   };
 
+  // Define assertions
+  // Reference: https://docs.gatling.io/reference/script/core/assertions/
+  const stressTestAssertions = [
+    global().responseTime().percentile(90).lt(500),
+    global().failedRequests().percent().lt(5),
+  ];
+
+  const getAssertions = () => {
+    switch (testType) {
+      case "stress":
+        return stressTestAssertions;
+      default:
+        return [global().failedRequests().count().lt(1)];
+    }
+  };
+
   // Define injection profile and execute the test
   // Reference: https://docs.gatling.io/reference/script/core/injection/
   setUp(injectionProfile())
-    .assertions(
-      global().responseTime().percentile(90).lt(500),
-      global().failedRequests().percent().lt(5),
-    )
+    .assertions(...getAssertions())
     .protocols(httpProtocol);
 });
